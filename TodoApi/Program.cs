@@ -9,9 +9,22 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoContext>(opt => 
         opt.UseInMemoryDatabase("TodoList"));
 
+builder.Services.AddDbContext<ScheduleContext>(opt =>
+        opt.UseInMemoryDatabase("ScheduleList"));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("AllowAnyOrigin",
+        builder =>
+        {
+            builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        });
+});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -19,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAnyOrigin");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
